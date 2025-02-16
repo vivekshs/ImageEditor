@@ -1,0 +1,53 @@
+.header-panel{
+    background-color: rgb(116, 82, 82);
+    display: flex;
+    direction: row;
+    align-items: center;
+   
+}
+.icon-img{
+    display: flex;
+    width: 100px;
+    border-radius: 20px;
+    padding: 14px;
+}
+.left-cont{
+    flex: 0.5;
+}
+.middle-cont{
+    flex: 2;
+}
+.right-cont{
+    flex:1;
+}
+.upload-section{
+    background-color: rgb(214, 197, 197);
+    padding: 10px;
+    display: flex;
+    justify-content: end;
+}
+.nav-panel{
+    width: 100px;
+    position: fixed;
+    left:0px;
+    top: 130px;
+    bottom: 10px;
+}
+
+.nav-link img{
+    height: 50px;
+    width: 50px;
+}
+.display-img{
+    width: 600px;
+    height: 450px;
+    background-color: rgb(255, 255, 255);
+    position: fixed;
+    right: 20px;
+    left: 400px; 
+    top: 140px;
+    bottom: 300px;
+}
+body{
+    background-color: rgb(216, 166, 166);
+}
