@@ -3,47 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Design Dashboard{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Image Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
-        <!-- Left Sidebar -->
-        <aside class="sidebar">
-            <h2>Design Dashboard</h2>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/projects">Projects</a></li>
-                    <li><a href="/templates">Templates</a></li>
-                </ul>
-            </nav>
-            <form method="POST" class="create-form">
-                <input type="text" name="title" placeholder="Design Title" required>
-                <input type="text" name="size" placeholder="Size (e.g., 2560x1440 px)" required>
-                <button type="submit" class="create-btn">+ Create Design</button>
-            </form>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="content">
-            <!-- Header with Navbar -->
-            <header class="navbar-container">
-                <div class="logo">Logo</div>
-                <div class="nav-bar">
-                    <input type="text" placeholder="Search...">
-                    <div class="nav-icons">
-                        <img src="/static/images/settings.svg" alt="Settings">
-                        <img src="/static/images/notification.svg" alt="Notifications">
-                        <img src="/static/images/profile.svg" alt="Profile">
-                    </div>
-                </div>
-            </header>
-
-            {% block content %}{% endblock %}
-        </main>
+        <h1>Image Editor</h1>
+        <input type="file" id="Upload" accept="image/*">
+        <canvas id="canvas" width="600" height="400" style="border:1px solid black;"></canvas>
+        <input type="range" id="Slider" min="-100" max="100" value="0">
+        <button id="download">Download</button>
+        
     </div>
-
-    <script src="/static/js/main.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

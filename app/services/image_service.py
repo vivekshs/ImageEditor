@@ -1,22 +1,187 @@
 import cv2
 import numpy as np
 
-def process_image(image_file, action):
 
-    image_data = np.frombuffer(image_file.read(), np.uint8)
-    image = cv2.imdecode(image_data, cv2.IMREAD_COLOR)
+class ImageProcessor:
+    def __init__(self, image):
+        self.image = image
 
-    if action == 'grayscale':
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    elif action == 'blur':
-        image = cv2.GaussianBlur(image, (15, 15), 0)
-    elif action == 'rotate':
-        height, width = image.shape[:2]
-        matrix = cv2.getRotationMatrix2D((width / 2, height / 2), 90, 1)
-        image = cv2.warpAffine(image, matrix, (width, height))
-    elif action == 'contrast':
-        image = cv2.convertScaleAbs(image, alpha=1.5, beta=0)
+    def to_bytes(self):
+        _, buffer = cv2.imencode('.png', self.image)
+        return buffer.tobytes()
 
-    _, img_encoded = cv2.imencode('.png', image)
+    def process(self):
+        raise NotImplementedError("Subclasses must implement this method")
+    
+def apply_processor(image, processor_class, *args):
+    processor = processor_class(image, *args)
+    return processor.process()
 
-    return img_encoded.tobytes()
+
+def process_image(image_file, action, value=0):
+    processors = {
+        'rotate_left': RotateLeft,
+        'rotate_right': RotateRight,
+        'flip': Flip,
+        'brightness': Brightness,
+        'grayscale': Grayscale,
+        'blur': Blur,
+        'contrast': Contrast,
+        'exposure': Exposure,
+        'brilleance': Brilliance,
+        'highlight': Highlight,
+        'shadows': Shadows,
+        'vignette': Vignette,
+        'noise_reduction': NoiseReduction,
+        'sharpness': Sharpness,
+    }
+
+    if action not in processors:
+        raise ValueError(f"Invalid action: {action}")
+
+    return apply_processor(image_file, processors[action], value)
+
+class RotateLeft(ImageProcessor):
+    def process(self):
+        self.image = cv2.rotate(self.image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        return self.to_bytes()
+
+class RotateRight(ImageProcessor):
+    def process(self):
+        self.image = cv2.rotate(self.image, cv2.ROTATE_90_CLOCKWISE)
+        return self.to_bytes()
+
+class Flip(ImageProcessor):
+    def __init__(self, image, axis):
+        super().__init__(image)
+        self.axis = axis
+
+    def process(self):
+        self.image = cv2.flip(self.image, self.axis)
+        return self.to_bytes()
+
+class Brightness(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100)
+
+    def process(self):
+        self.image = cv2.convertScaleAbs(self.image, alpha=1, beta=self.value)
+        return self.to_bytes()
+
+class Grayscale(ImageProcessor):
+    def __init__(self, image, intensity):
+        super().__init__(image)
+        self.intensity = np.clip(intensity, -100, 100) / 100
+
+    def process(self):
+        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+        gray_bgr = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+        self.image = cv2.addWeighted(self.image, 1 - self.intensity, gray_bgr, self.intensity, 0)
+        return self.to_bytes()
+
+class Blur(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = max(1, value // 2 * 2 + 1)
+
+    def process(self):
+        self.image = cv2.GaussianBlur(self.image, (self.value, self.value), 0)
+        return self.to_bytes()
+
+class Contrast(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100) / 100 + 1
+
+    def process(self):
+        self.image = cv2.convertScaleAbs(self.image, alpha=self.value, beta=0)
+        return self.to_bytes()
+
+class Exposure(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100)
+
+    def process(self):
+        self.image = cv2.convertScaleAbs(self.image, alpha=1, beta=self.value)
+        return self.to_bytes()
+
+class Brilliance(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100) / 100
+
+    def process(self):
+        hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
+        h, s, v = cv2.split(hsv)
+        assert h.shape == s.shape == v.shape
+
+        h = h.astype(np.uint8)
+        s = s.astype(np.uint8)
+        v = v.astype(np.uint8)
+
+        if self.value > 0:
+            # Boost saturation proportionally
+            s = np.clip(s * (1 + self.value), 0, 255).astype(np.uint8)
+        else:
+            # Reduce saturation
+            s = np.clip(s * (1 + self.value), 0, 255).astype(np.uint8)
+
+        hsv = cv2.merge((h, s, v))
+        assert hsv.shape == self.image.shape
+        self.image = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
+        return self.to_bytes()
+
+class Highlight(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100)
+
+    def process(self):
+        hls = cv2.cvtColor(self.image, cv2.COLOR_BGR2HLS).astype(np.float32)
+        h, l, s = cv2.split(hls)
+        mask = l > 180  
+        return self.to_bytes()
+
+class Shadows(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100)
+
+    def process(self):
+        mask = self.image < 50
+        self.image = np.where(mask, np.clip(self.image + self.value, 0, 255), self.image).astype(np.uint8)
+        return self.to_bytes()
+
+class NoiseReduction(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = max(0, value)
+
+    def process(self):
+        self.image = cv2.fastNlMeansDenoisingColored(self.image, None, self.value, self.value, 7, 21)
+        return self.to_bytes()
+
+class Vignette(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100) / 100
+
+    def process(self):
+        rows, cols = self.image.shape[:2]
+        X, Y = np.meshgrid(np.linspace(-1, 1, cols), np.linspace(-1, 1, rows))
+        mask = np.sqrt(X ** 2 + Y ** 2)
+        mask = np.clip(1 - mask, 0, 1) * (1 - self.value)
+        self.image = (self.image * mask[:, :, np.newaxis]).astype(np.uint8)
+        return self.to_bytes()
+
+class Sharpness(ImageProcessor):
+    def __init__(self, image, value):
+        super().__init__(image)
+        self.value = np.clip(value, -100, 100) / 100
+
+    def process(self):
+        blurred = cv2.GaussianBlur(self.image, (0, 0), 3)
+        self.image = cv2.addWeighted(self.image, 1 + self.value, blurred, -self.value, 0)
+        return self.to_bytes()
