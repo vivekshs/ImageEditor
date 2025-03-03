@@ -3,47 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Design Dashboard{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Comnet Image Editor</title>
+    <link rel="stylesheet" href="/ImageEditor/app/static/css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<script src="/ImageEditor/app/static/js/popup.js" defer></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Left Sidebar -->
-        <aside class="sidebar">
-            <h2>Design Dashboard</h2>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/projects">Projects</a></li>
-                    <li><a href="/templates">Templates</a></li>
-                </ul>
-            </nav>
-            <form method="POST" class="create-form">
-                <input type="text" name="title" placeholder="Design Title" required>
-                <input type="text" name="size" placeholder="Size (e.g., 2560x1440 px)" required>
-                <button type="submit" class="create-btn">+ Create Design</button>
-            </form>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="content">
-            <!-- Header with Navbar -->
-            <header class="navbar-container">
-                <div class="logo">Logo</div>
-                <div class="nav-bar">
-                    <input type="text" placeholder="Search...">
-                    <div class="nav-icons">
-                        <img src="/static/images/settings.svg" alt="Settings">
-                        <img src="/static/images/notification.svg" alt="Notifications">
-                        <img src="/static/images/profile.svg" alt="Profile">
-                    </div>
-                </div>
-            </header>
-
-            {% block content %}{% endblock %}
-        </main>
+    <div class="sidebar">
+        <div class="header">
+            <button>
+                <img src="/ImageEditor/app/static/icons/menu.svg" alt="menu">
+            </button>
+        </div>
+    
+        <div class="sidebar-list">
+            <div class="sidebar-item">
+                <a href="https://www.google.com/">
+                    <img src="/ImageEditor/app/static/icons/home.svg" alt="home">
+                    <p>Home</p>
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="https://www.google.com/">
+                    <img src="/ImageEditor/app/static/icons/folder.svg" alt="Projects">
+                    <p>Projects</p>
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="https://www.google.com/">
+                    <img  src="/ImageEditor/app/static/icons/layout.svg" alt="Templates">
+                    <p>Templates</p>
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="https://www.google.com/">
+                    <img src="/ImageEditor/app/static/icons/brand.svg" alt="Brand">
+                    <p>Brand</p>
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="https://www.google.com/">
+                    <img src="/ImageEditor/app/static/icons/ui-design.svg" alt="Apps">
+                    <p>Apps</p>
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="https://www.google.com/">
+                    <img src="/ImageEditor/app/static/icons/flask.svg" alt="Dream Lab">
+                    <p>Dream Lab</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="middlebar">
+        <div class="middlebar-header">
+            <img src="/ImageEditor/app/static/logo/8439b51bb7a19f6e65ce1064bc37c197.svg" alt="">
+            <button data-modal-target="#popup">
+                <img style="width: 35px; display: inline;" src="/ImageEditor/app/static/icons/add_circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                <p>Create a design</p>
+            </button>
+        </div>
+        <div class="recent">
+            <div class="middlebar-recent">
+                <h4>Recent Templates</h4>
+            </div>
+        </div>
+        <div class="trash">
+            <button>
+                <img src="/ImageEditor/app/static/icons/delete_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                <p>Trash</p>
+            </button>
+            
+        </div>
     </div>
 
-    <script src="/static/js/main.js"></script>
+    <div class="popup" id="popup">
+        <div class="popup-sidebar">
+            <div class="popup-sidebar-header">
+                <h2>Create a design</h2>
+            </div>
+            <div class="popup-sidebar-main">
+                <a href="#">
+                    <ul>
+                        <li data-target="#custom-size-content" >
+                            <img src="/ImageEditor/app/static/icons/fit_page_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Size">
+                            <p>Custom Size</p>
+                        </li>
+                        <li>
+                            <img src="/ImageEditor/app/static/icons/upload_file_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Upload">
+                            <p>Upload</p>
+                        </li>
+                        <li>
+                            <img src="/ImageEditor/app/static/icons/more_horiz_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="More">
+                            <p>More</p>
+                        </li>
+                    </ul>
+                </a>
+            </div>
+        </div>
+        <div class="popup-main">
+            <div class="popup-main-header">
+
+                <div id="custom-size-content" class="custom-size-container hidden">
+                    <h3>Custom size</h3>
+                    <form class="custom-size-form" id="customSizeForm">
+                        <div class="input-group">
+                            <label for="width">Width</label>
+                            <input type="number" id="width" name="width" placeholder="" required>
+                        </div>
+                
+                        <div class="input-group">
+                            <label for="height">Height</label>
+                            <input type="number" id="height" name="height" placeholder="" required>
+                        </div>
+                
+                        <div class="input-group">
+                            <label for="units">Units</label>
+                            <select id="units" name="units" required>
+                                <option value="" disabled selected>Select unit</option>
+                                <option value="px">px</option>
+                                <option value="cm">cm</option>
+                                <option value="in">in</option>
+                            </select>
+                        </div>
+                
+                        <button type="submit" class="submit-button" id="createButton" disabled>Create new design</button>
+                    </form>
+                </div>
+                
+                <div class="upload-container hidden">
+                    <h3>Upload</h3>
+                    <form action="">
+                        <div class="input-group">
+                            <label for="file">Choose a file</label>
+                            <input type="file" id="file" name="file" required>
+                        </div>
+                
+                        <button type="submit" class="submit-button" id="uploadButton" disabled>Upload</button>
+                        
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+        <div class="popup-end">
+            <button data-close-button class="close-button">&times;</button>
+        </div>
+        
+    </div>
+    <div  id="overlay"></div>
+
+    <div class="main">
+        <div class="main-header">
+            
+        </div>
+    </div>
 </body>
 </html>
