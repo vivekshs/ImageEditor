@@ -1,14 +1,16 @@
-const imageInput = document.getElementById('imageInput');
+const imageInput = document.getElementById('Upload');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const filterSelect = document.getElementById('filterSelect');
-const downloadBtn = document.getElementById('downloadBtn');
+const Slider = document.getElementById('Slider');
+const download = document.getElementById('download');
 
-let currentImage = null;
+let currentFile = null;
 
 imageInput.addEventListener('change', () => {
     const file = imageInput.files[0];
-    if (!file) return;
+    if (!file) return print("No file selected.");
+
+    currentFile = file;
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -16,63 +18,50 @@ imageInput.addEventListener('change', () => {
         img.onload = () => {
             canvas.width = img.width;
             canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            currentImage = img;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
         };
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
 });
 
-function applyFilter() {
-    if (!currentImage) return alert("Upload an image first!");
 
-    const formData = new FormData();
-    formData.append('image', imageInput.files[0]);
-    formData.append('action', filterSelect.value);
-
-    fetch('/upload', { method: 'POST', body: formData })
-        .then(response => response.blob())
-        .then(blob => {
-            const url = URL.createObjectURL(blob);
-            const img = new Image();
-            img.onload = () => {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                downloadBtn.style.display = 'block';
-            };
-            img.src = url;
-        })
-        .catch(err => alert("Error: " + err.message));
-}
-
-function downloadImage() {
-    const link = document.createElement('a');
-    link.download = 'edited_image.png';
-    link.href = canvas.toDataURL();
-    link.click();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    loadPage('home');
-
-    document.getElementById('create-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        fetch('/create_design', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-          .then(() => loadPage('home'));
-    });
+Slider.addEventListener('input', () => {
+    if (currentFile) {
+        updateBrightness(currentFile, Slider.value);
+    }
 });
 
-function loadPage(page) {
-    fetch('/load_page', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: new URLSearchParams({ page: page })
-    }).then(response => response.text())
-      .then(html => document.getElementById('page-content').innerHTML = html);
+
+async function updateBrightness(imageFile, exposure) {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+    formData.append('action', 'sharpness'); 
+    formData.append('value', exposure);
+
+    try {
+        const response = await fetch('/upload', { method: 'POST', body: formData });
+        const blob = await response.blob();
+        displayImage(URL.createObjectURL(blob));
+    } catch (err) {
+        console.error("Error updating brightness:", err);
+    }
 }
+function displayImage(imageUrl) {
+    const img = new Image();
+    img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+    };
+    img.src = imageUrl;
+}
+
+download.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = 'adjusted_image.png';
+    link.href = canvas.toDataURL();
+    link.click();
+});
+

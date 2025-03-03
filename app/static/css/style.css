@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+canvas {
+    
+    display: block;
+    margin: 20px auto;
+    width: 600px;
+    height: 400px;
+    border: 2px solid black;
+}
+
+input[type="file"] {
+    margin-bottom: 10px;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin: 20px 0;
+}
+
+button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background: #0056b3;
+}
