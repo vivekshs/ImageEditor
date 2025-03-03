@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-
 class ImageProcessor:
     def __init__(self, image):
         self.image = image
@@ -16,7 +15,6 @@ class ImageProcessor:
 def apply_processor(image, processor_class, *args):
     processor = processor_class(image, *args)
     return processor.process()
-
 
 def process_image(image_file, action, value=0):
     processors = {
