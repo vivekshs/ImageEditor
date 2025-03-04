@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor page</title>
+    <link rel="stylesheet" href="/ImageEditor/app/static/css/editor.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="/ImageEditor/app/static/js/editor.js" defer></script>
+</head>
+<body>
+    <div class="editor">
+
+
+        <div class="editor-header">
+            <div class="editor-header-left">
+                <button>
+                    <img src="/ImageEditor/app/static/icons/menu.svg" alt="menu">
+                </button>
+                <button>File</button>
+                <button>Resize</button>
+                <button>
+                    <img src="/ImageEditor/app/static/icons/undo_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="undo">
+                </button>
+                <button>
+                    <img src="/ImageEditor/app/static/icons/redo_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="redo">
+                </button>
+                <button>
+                    <img src="/ImageEditor/app/static/icons/file_save_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="save">
+                </button>
+            </div>
+            <div class="editor-header-right">
+                <button>
+                    <img src="/ImageEditor/app/static/icons/download_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="download">
+                    Download
+                </button>
+            </div>
+        </div>
+
+
+        <div class="editor-sidebar">
+            <div class="editor-filter" onclick="toggleSublist()">
+                <img src="/ImageEditor/app/static/icons/tune_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="Filters">
+                <p>Filters</p>
+            </div>
+            <div class="sublist" id="filterSublist">
+                <div class="sublist-item">
+                    <p>Brightness</p>
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+                <div class="sublist-item">
+                    <p>Hue</p>
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+                <div class="sublist-item">
+                    <p>Warm</p>
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+                <div class="sublist-item">
+                    <p>Cool</p>
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+            </div>
+            <div class="editor-elments">
+                <img src="/ImageEditor/app/static/icons/interests_24dp_000000_FILL0_wght400_GRAD0_opsz24 (1).svg" alt="">
+                <p>Elements</p>
+            </div>
+            <div class="editor-text">
+                <img src="/ImageEditor/app/static/icons/text_fields_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                <p>Text</p>
+            </div>
+            <div class="editor-draw">
+                <img src="/ImageEditor/app/static/icons/draw_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                <p>Draw</p>
+            </div>
+        </div>
+
+
+        <div class="editor-main" id="editorMain">
+           
+
+        </div>
+    </div>
+</body>
+</html>
