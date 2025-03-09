@@ -26,7 +26,7 @@ def process_image(image_file, action, value=0):
         'blur': Blur,
         'contrast': Contrast,
         'exposure': Exposure,
-        'brilleance': Brilliance,
+        'brilliance': Brilliance,
         'highlight': Highlight,
         'shadows': Shadows,
         'vignette': Vignette,
@@ -35,6 +35,7 @@ def process_image(image_file, action, value=0):
     }
 
     if action not in processors:
+        print("Available actions:", processors.keys())
         raise ValueError(f"Invalid action: {action}")
 
     return apply_processor(image_file, processors[action], value)

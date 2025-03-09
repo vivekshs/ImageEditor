@@ -6,7 +6,6 @@
     <title>Editor page</title>
     <link rel="stylesheet" href="/ImageEditor/app/static/css/editor.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <script src="/ImageEditor/app/static/js/editor.js" defer></script>
 </head>
 <body>
     <div class="editor">
@@ -30,7 +29,7 @@
                 </button>
             </div>
             <div class="editor-header-right">
-                <button>
+                <button >
                     <img src="/ImageEditor/app/static/icons/download_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="download">
                     Download
                 </button>
@@ -44,24 +43,14 @@
                 <p>Filters</p>
             </div>
             <div class="sublist" id="filterSublist">
+                {% for action in actions %}
                 <div class="sublist-item">
-                    <p>Brightness</p>
-                    <input type="range" min="0" max="100" value="50">
+                    <p>{{ action }}</p>
+                    <input type="range" min="-100" max="100" value="0" id="{{ action }}" onchange="applyFilter('{{ action }}', this.value)">
                 </div>
-                <div class="sublist-item">
-                    <p>Hue</p>
-                    <input type="range" min="0" max="100" value="50">
-                </div>
-                <div class="sublist-item">
-                    <p>Warm</p>
-                    <input type="range" min="0" max="100" value="50">
-                </div>
-                <div class="sublist-item">
-                    <p>Cool</p>
-                    <input type="range" min="0" max="100" value="50">
-                </div>
+                {% endfor %}
             </div>
-            <div class="editor-elments">
+            <div class="editor-elements">
                 <img src="/ImageEditor/app/static/icons/interests_24dp_000000_FILL0_wght400_GRAD0_opsz24 (1).svg" alt="">
                 <p>Elements</p>
             </div>
@@ -76,10 +65,8 @@
         </div>
 
 
-        <div class="editor-main" id="editorMain">
-           
-
-        </div>
+        <div id="editorMain" data-image-url="{{ image_url }}"></div>
     </div>
 </body>
+<script src="/ImageEditor/app/static/js/editor.js" defer></script>
 </html>
