@@ -1,168 +1,171 @@
-const openModalButtons=document.querySelectorAll('[data-modal-target]')
-const closeModalButtons=document.querySelectorAll('[data-close-button]')
-const overlay=document.getElementById('overlay')
+// Modal handling
+const openModalButtons = document.querySelectorAll('[data-modal-target]');
+const closeModalButtons = document.querySelectorAll('[data-close-button]');
+const overlay = document.getElementById('overlay');
 
-openModalButtons.forEach(button=>{
-    button.addEventListener('click',()=>{
-        const modal=document.querySelector(button.dataset.modalTarget)
-        openModal(modal)
-    })
-})
-overlay.addEventListener('click',()=>{
-    const modals=document.querySelectorAll('.popup.active')
-    modals.forEach(modal=>{
-        closeModal(modal)
-    })
-})
-closeModalButtons.forEach(button=>{
-    button.addEventListener('click',()=>{
-        const modal=button.closest('.popup')
-        closeModal(modal)
-    })
-})
-function openModal(modal){
-    if(modal==null) return
-    modal.classList.add('active')
-    overlay.classList.add('active')
-}
+const toggleModal = (modal, action) => {
+    if (!modal) return;
+    modal.classList.toggle('active', action);
+    overlay.classList.toggle('active', action);
+};
 
-function closeModal(modal){
-    if(modal==null) return
-    modal.classList.remove('active')
-    overlay.classList.remove('active')
-}
-document.querySelector('.popup').classList.add('active');
-document.querySelector('.popup').style.display = 'grid';  
-document.querySelector('.popup').style.gridTemplateColumns = '1fr 3fr';  
+document.addEventListener("DOMContentLoaded", () => {
+    const popup = document.querySelector('.popup');
+    if (overlay && popup) toggleModal(popup, false);
+});
 
-// Get form elements
+openModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const modal = document.querySelector(button.dataset.modalTarget);
+        toggleModal(modal, true);
+    });
+});
+
+closeModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        toggleModal(button.closest('.popup'), false);
+    });
+});
+
+overlay.addEventListener('click', () => {
+    document.querySelectorAll('.popup.active').forEach(modal => toggleModal(modal, false));
+});
+
+// Form validation
 const form = document.getElementById("customSizeForm");
 const createButton = document.getElementById("createButton");
-const inputs = form.querySelectorAll("input, select");
+const inputs = form?.querySelectorAll("input, select") || [];
 
-// Check if all inputs have values
-function checkForm() {
-    let allFilled = true;
-    inputs.forEach(input => {
-        if (input.value === "") {
-            allFilled = false;
-        }
-    });
+const checkForm = () => {
+    const allFilled = Array.from(inputs).every(input => input.value.trim() !== "");
+    createButton.disabled = !allFilled;
+    createButton.classList.toggle("active", allFilled);
+};
 
-    if (allFilled) {
-        createButton.disabled = false;
-        createButton.classList.add("active");
-    } else {
-        createButton.disabled = true;
-        createButton.classList.remove("active");
-    }
-}
-
-// Listen for input changes
-inputs.forEach(input => {
-    input.addEventListener("input", checkForm);
-});
-
-// Run check on page load
+inputs.forEach(input => input.addEventListener("input", checkForm));
 checkForm();
 
+// Content switching
 const targetButtons = document.querySelectorAll('[data-target]');
 
-targetButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const targetId = button.getAttribute('data-target');
-        const targetDiv = document.querySelector(targetId);
-
-        // Hide all popup content first
-        document.querySelectorAll('.custom-size-container').forEach(div => {
-            div.classList.add('hidden');
-            div.style.display = 'none'; 
-        });
-
-        // Show the targeted div
-        if (targetDiv) {
-            targetDiv.classList.remove('hidden');
-            targetDiv.style.display = 'block'; 
-        }
+const switchContent = (targetId) => {
+    document.querySelectorAll('.custom-size-container').forEach(div => {
+        div.classList.add('hidden');
+        div.style.display = 'none';
     });
-});
-document.addEventListener("DOMContentLoaded", () => {
-    const overlay = document.getElementById('overlay');
-    const popup = document.querySelector('.popup');
 
-    // Show overlay and popup if they exist
-    if (overlay && popup) {
-        overlay.classList.add('active');
-        popup.classList.add('active');
-        popup.style.display = 'grid';  
-        popup.style.gridTemplateColumns = '1fr 3fr';  
+    const targetDiv = document.querySelector(targetId);
+    if (targetDiv) {
+        targetDiv.classList.remove('hidden');
+        targetDiv.style.display = 'block';
     }
+};
+
+targetButtons.forEach(button => {
+    button.addEventListener('click', () => switchContent(button.getAttribute('data-target')));
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+// Sidebar navigation
+const setupSidebarNavigation = () => {
     const customSizeButton = document.querySelector('[data-target="#custom-size-content"]');
     const uploadButton = document.querySelector('.popup-sidebar-main ul li:nth-child(2)');
-    const customSizeContent = document.querySelector("#custom-size-content");
-    const uploadContent = document.querySelector(".upload-container");
     const allListItems = document.querySelectorAll(".popup-sidebar-main ul li");
     const allContents = document.querySelectorAll(".popup-main-header > div");
 
-    // Hide all containers by default
-    allContents.forEach(section => {
-        section.classList.add("hidden");
-        section.style.display = "none";  // Ensure all sections are hidden initially
-    });
-
-    // Function to handle button clicks
-    function handleButtonClick(button, contentToShow) {
-        // Remove active class from all list items
+    const handleButtonClick = (button, contentToShow) => {
         allListItems.forEach(item => item.classList.remove("active"));
-
-        // Add active class to the clicked item
         button.classList.add("active");
 
-        // Hide all content sections
         allContents.forEach(section => {
             section.classList.add("hidden");
-            section.style.display = "none";  // Ensure all sections are hidden
+            section.style.display = "none";
         });
 
-        // Show the selected content
         if (contentToShow) {
             contentToShow.classList.remove("hidden");
-            contentToShow.style.display = "block";  // Display the targeted section
+            contentToShow.style.display = "block";
         }
+    };
+
+    customSizeButton?.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleButtonClick(customSizeButton, document.querySelector("#custom-size-content"));
+    });
+
+    uploadButton?.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleButtonClick(uploadButton, document.querySelector(".upload-container"));
+    });
+
+    handleButtonClick(customSizeButton, document.querySelector("#custom-size-content"));
+};
+
+document.addEventListener("DOMContentLoaded", setupSidebarNavigation);
+
+//Upload Btn
+// Get DOM Elements
+const uploadBox = document.getElementById('uploadBox');
+const fileInput = document.getElementById('fileInput');
+const uploadBtn = document.getElementById('uploadBtn');
+
+// Trigger File Input on Click
+uploadBox.addEventListener('click', () => fileInput.click());
+uploadBtn.addEventListener('click', () => fileInput.click());
+
+// Handle Drag & Drop
+uploadBox.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadBox.style.borderColor = '#0073e6';
+});
+
+uploadBox.addEventListener('dragleave', () => {
+    uploadBox.style.borderColor = '#ccc';
+});
+
+uploadBox.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadBox.style.borderColor = '#ccc';
+
+    if (e.dataTransfer.files.length > 0) {
+        handleImageUpload(e.dataTransfer.files[0]);
     }
-
-    // Event listener for Custom Size button
-    customSizeButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        handleButtonClick(customSizeButton, customSizeContent);
-    });
-
-    // Event listener for Upload button
-    uploadButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        handleButtonClick(uploadButton, uploadContent);
-    });
-
-    // Show Custom Size by default on page load
-    handleButtonClick(customSizeButton, customSizeContent);
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.getElementById("file");
-    const uploadButton = document.getElementById("uploadButton");
+// Handle File Input Change
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+        handleImageUpload(fileInput.files[0]);
+    }
+});
+document.getElementById("uploadBtn").addEventListener("click", uploadImage, { once: true });
 
-    fileInput.addEventListener("change", function () {
-        if (fileInput.files.length > 0) {  // Check if a file is selected
-            uploadButton.disabled = false;         // Enable the button
-            uploadButton.classList.add("active");  // Add active class for styling
-        } else {
-            uploadButton.disabled = true;          // Disable the button if no file is selected
-            uploadButton.classList.remove("active");  // Remove active class
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+        handleImageUpload(fileInput.files[0]);
+    }
+});
+
+// Upload Image Function
+async function handleImageUpload(file) {
+    try {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const response = await fetch("/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    });
-});
 
+        // Redirect to the editor page
+        window.location.href = response.url;
 
+    } catch (error) {
+        console.error("Upload failed:", error);
+        alert("Failed to upload image. Please try again.");
+    }
+}
+console.log("popup.js loaded");
