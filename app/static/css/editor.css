@@ -172,3 +172,63 @@ body {
     border: 1px solid #000;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
 }
+.floating-menu {
+    position: fixed;
+    top: 70px;
+    left: 250px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    cursor: grab;
+    width: 60px;
+    transition: opacity 0.3s ease;
+}
+
+.floating-menu:hover {
+    opacity: 1;
+}
+
+.menu-header {
+    background-color: #8B3DFF;
+    color: #fff;
+    padding: 5px;
+    text-align: center;
+    cursor: grab;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.drag-hint {
+    cursor: grab;
+}
+
+.menu-icons {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.icon-btn {
+    background-color: transparent;
+    border: none;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.icon-btn img {
+    width: 30px;
+    height: 30px;
+    filter: invert(0.5);
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.icon-btn img:hover {
+    transform: scale(1.1);
+    filter: invert(0);
+}
+
+.floating-menu:active {
+    cursor: grabbing;
+}

@@ -73,3 +73,36 @@ download.addEventListener('click', () => {
     link.href = canvas.toDataURL();
     link.click();
 });
+
+const floatingMenu = document.getElementById("floatingMenu");
+const menuHeader = document.getElementById("menuHeader");
+
+let isDragging = false;
+let offsetX = 0;
+let offsetY = 0;
+
+menuHeader.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - floatingMenu.offsetLeft;
+    offsetY = e.clientY - floatingMenu.offsetTop;
+    document.body.style.userSelect = "none"; // Prevent text selection while dragging
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+        const newX = e.clientX - offsetX;
+        const newY = e.clientY - offsetY;
+
+        // Ensure the menu doesn't go outside the viewport
+        const maxX = window.innerWidth - floatingMenu.offsetWidth;
+        const maxY = window.innerHeight - floatingMenu.offsetHeight;
+
+        floatingMenu.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
+        floatingMenu.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
+    }
+});
+
+document.addEventListener("mouseup", () => {
+    isDragging = false;
+    document.body.style.userSelect = "auto"; // Restore text selection
+});
