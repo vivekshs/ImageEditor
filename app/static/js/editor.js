@@ -12,14 +12,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const width = parseFloat(urlParams.get("width"));
     const height = parseFloat(urlParams.get("height"));
     const units = urlParams.get("units");
-    const imageURL = editorMain.dataset.imageUrl; 
 
+    // Ensure #editorMain exists after DOM is fully loaded
+    const editorMain = document.getElementById("editorMain");
+    if (!editorMain) {
+        console.error("Cannot find 'editorMain' element.");
+        return;
+    }
+
+    const imageURL = editorMain.dataset.imageUrl; 
     if (!imageURL) {
         console.error("Image URL not found.");
         return;
     }
 
-    // Convert dimensions based on units
+    // Helper function: Convert units to pixels
     const convertUnitsToPixels = (value, unit) => {
         if (isNaN(value)) return null;
         switch (unit) {
@@ -29,39 +36,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    let pixelWidth = convertUnitsToPixels(width, units) || 800;
-    let pixelHeight = convertUnitsToPixels(height, units) || 600;
+    // let pixelWidth = convertUnitsToPixels(width, units) || 800;
+    // let pixelHeight = convertUnitsToPixels(height, units) || 600;
 
-    // Ensure canvas and editorMain exist
-    const editorMain = document.getElementById("editorMain");
-    if (!editorMain) {
-        console.error("Cannot find 'editorMain' element.");
-        return;
-    }
-
-    // Reuse or create the canvas
+    // Create or reuse canvas
     let canvas = document.getElementById("canvas");
     if (!canvas) {
         canvas = document.createElement("canvas");
         canvas.id = "canvas";
-        canvas.style.border = "1px solid #000";
         editorMain.appendChild(canvas);
     }
 
     const ctx = canvas.getContext("2d");
 
+    // Load and draw image
     const img = new Image();
     img.crossOrigin = "anonymous";
-
     img.onload = () => {
-        canvas.width = pixelWidth || img.width;
-        canvas.height = pixelHeight || img.height;
+        canvas.width = img.width || pixelWidth;
+        canvas.height = img.height || pixelHeight;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        console.log("Image rendered successfully.");
     };
 
     img.onerror = () => {
-        console.error("Failed to load image from URL: ", imageURL);
+        console.error("Failed to load image from URL:", imageURL);
     };
 
     img.src = imageURL;
+});
+
+const download = document.getElementById('download');
+download.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = 'adjusted_image.png';
+    link.href = canvas.toDataURL();
+    link.click();
 });
