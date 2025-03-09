@@ -70,7 +70,8 @@ def editor():
     if not image_id or image_id not in image_store:
         return "Invalid image ID", 400
 
-    image_url = url_for('main.get_image', image_id=image_id)
+    image_url = url_for('main.get_image', image_id=image_id, _external=True)
+    print(f"Image URL: {image_url}") 
 
     actions = [
         "rotate_left", "rotate_right", "flip", "brightness",
