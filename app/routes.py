@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, send_file, redirect, url_for
-from werkzeug.utils import secure_filename
 from io import BytesIO
 import cv2
 import numpy as np
@@ -31,9 +30,6 @@ def upload():
     if image_file.filename == '':
         return "No image uploaded", 400
 
-    filename = secure_filename(image_file.filename)  # Security best practice
-    print(f"Received image: {filename}")
-
     # Convert uploaded image to OpenCV format
     try:
         image = np.frombuffer(image_file.read(), np.uint8)
@@ -47,9 +43,6 @@ def upload():
     image_id = str(uuid.uuid4())
     _, buffer = cv2.imencode('.png', image)
     image_store[image_id] = (time.time(), BytesIO(buffer))
-
-    # Cleanup old images
-    cleanup_images()
 
     return redirect(url_for('main.editor', image_id=image_id))
 
@@ -67,17 +60,22 @@ def get_image(image_id):
 @main.route('/editor')
 def editor():
     image_id = request.args.get('image_id')
-    if not image_id or image_id not in image_store:
-        return "Invalid image ID", 400
+    width = request.args.get('width')
+    height = request.args.get('height')
+    units = request.args.get('units')
 
-    image_url = url_for('main.get_image', image_id=image_id, _external=True)
-    print(f"Image URL: {image_url}") 
+    if image_id:
+        if image_id not in image_store:
+            return "Invalid image ID", 400
+        image_url = url_for('main.get_image', image_id=image_id, _external=True)
+    else:
+        image_url = None
 
     actions = [
-        "rotate_left", "rotate_right", "flip", "brightness",
+        "brightness",
         "contrast", "grayscale", "blur", "exposure",
         "brilliance", "highlight", "shadows", "vignette",
         "noise_reduction", "sharpness"
     ]
 
-    return render_template('editor.html', actions=actions, image_url=image_url)
+    return render_template('editor.html', actions=actions, image_url=image_url, width=width, height=height, units=units,)
