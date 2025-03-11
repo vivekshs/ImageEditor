@@ -10,9 +10,13 @@ body{
     align-items: center;
     width: 70px;
     height: 100%;
-   
+    transition: width 0.3s ease;
     
 }
+.sidebar.collapsed {
+    width: 60px;
+}
+
 .header{
     display: flex;
     flex-direction: column;
@@ -99,9 +103,15 @@ body{
     flex-direction: column;
     justify-content: space-between;
     background-color: rgb(241, 227, 241);
-    border-left:0.3px solid rgb(206, 171, 171);;
+    border-left:0.3px solid rgb(206, 171, 171);
+    transition: width 0.3s ease, opacity 0.3s ease;
 }
-
+.middlebar.hidden {
+    width: 0;
+    opacity: 0;
+    padding: 0;
+    overflow: hidden;
+}
 
 .middlebar img{
     display: block;
@@ -419,7 +429,13 @@ body{
     margin-right: 10px;
     padding: 8px 8px 0px 0px;
     border-radius: 10px;
+    transition: margin-left 0.3s ease, width 0.3s ease;
 }
+.main.expanded {
+    left: 70px; 
+    width: calc(100% - 60px -10px); 
+}
+
 
 .upload-container {
     display: flex;
@@ -464,3 +480,4 @@ body{
 .upload-btn:hover {
     background-color: #7A34E0;
 }
+
