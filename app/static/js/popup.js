@@ -137,13 +137,7 @@ fileInput.addEventListener('change', () => {
         handleImageUpload(fileInput.files[0]);
     }
 });
-document.getElementById("uploadBtn").addEventListener("click", uploadImage, { once: true });
-
-fileInput.addEventListener('change', () => {
-    if (fileInput.files.length > 0) {
-        handleImageUpload(fileInput.files[0]);
-    }
-});
+document.getElementById("uploadBtn").addEventListener("click", uploadImage);
 
 // Upload Image Function
 async function handleImageUpload(file) {
@@ -168,4 +162,3 @@ async function handleImageUpload(file) {
         alert("Failed to upload image. Please try again.");
     }
 }
-console.log("popup.js loaded");
