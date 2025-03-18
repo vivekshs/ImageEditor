@@ -1,62 +1,102 @@
-function initializeCanvas(imageURL, width, height, units) {
-    const convertUnitsToPixels = (value, unit) => {
-        if (isNaN(value)) return null;
-        switch (unit) {
-            case "cm": return value * 37.795;
-            case "in": return value * 96;
-            default: return value;
-        }
-    };
+let history = [];
+let redoStack = [];
+let canvas, ctx;
 
-    let pixelWidth = convertUnitsToPixels(width, units) || 800;
-    let pixelHeight = convertUnitsToPixels(height, units) || 600;
+function convertUnitsToPixels(value, unit) {
+    if (isNaN(value)) return null;
+    switch (unit) {
+        case "cm": return value * 37.795;
+        case "in": return value * 96;
+        default: return value;
+    }
+}
 
-    let canvas = document.getElementById("canvas");
+function createCanvas(parentId = "editorMain") {
+    canvas = document.getElementById("canvas");
     if (!canvas) {
         canvas = document.createElement("canvas");
         canvas.id = "canvas";
-        document.getElementById("editorMain").appendChild(canvas);
+        document.getElementById(parentId).appendChild(canvas);
     }
+    ctx = canvas.getContext("2d");
+}
 
-    const MAX_WIDTH = 800;
-    const MAX_HEIGHT = 600;
+function adjustCanvasSize(originalWidth, originalHeight) {
+    const MAX_WIDTH = 800, MAX_HEIGHT = 600;
+    let scaleRatio = Math.min(MAX_WIDTH / originalWidth, MAX_HEIGHT / originalHeight, 1);
 
-    const ctx = canvas.getContext("2d");
+    canvas.width = originalWidth;
+    canvas.height = originalHeight;
 
-    const adjustCanvasSize = (originalWidth, originalHeight) => {
-        let scaleRatio = Math.min(MAX_WIDTH / originalWidth, MAX_HEIGHT / originalHeight, 1);
+    canvas.style.width = `${originalWidth * scaleRatio}px`;
+    canvas.style.height = `${originalHeight * scaleRatio}px`;
+}
 
-        const displayWidth = originalWidth * scaleRatio;
-        const displayHeight = originalHeight * scaleRatio;
-
-        canvas.width = originalWidth;
-        canvas.height = originalHeight;
-
-        canvas.style.width = `${displayWidth}px`;
-        canvas.style.height = `${displayHeight}px`;
-    };
+function loadImageOnCanvas(imageURL, width, height, units) {
+    let pixelWidth = convertUnitsToPixels(width, units);
+    let pixelHeight = convertUnitsToPixels(height, units);
 
     if (imageURL && imageURL !== 'None') {
-        const img = new Image();
+        img = new Image();
         img.crossOrigin = "anonymous";
         img.onload = () => {
             adjustCanvasSize(img.width, img.height);
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-            console.log("Image rendered successfully.");
+            requestAnimationFrame(() => ctx.drawImage(img, 0, 0, img.width, img.height));
         };
         img.onerror = () => console.error("Failed to load image from URL:", imageURL);
         img.src = imageURL;
     } else {
         adjustCanvasSize(pixelWidth, pixelHeight);
         ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        requestAnimationFrame(() => ctx.fillRect(0, 0, canvas.width, canvas.height));
     }
 }
 
-const download = document.getElementById('download');
-download.addEventListener('click', () => {
+function saveState() {
+        history.push(canvas.toDataURL());
+        redoStack = [];
+}
+
+function restoreState(state) {
+    const img = new Image();
+    img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+    };
+    img.src = state;
+}
+
+function undo() {
+    if (history.length > 1) {
+        redoStack.push(history.pop());
+        restoreState(history[history.length - 1]);
+    }
+}
+
+function redo() {
+    if (redoStack.length > 0) {
+        const nextState = redoStack.pop();
+        history.push(nextState);
+        restoreState(nextState);
+    }
+}
+
+function download(filename = "image.png") {
     const link = document.createElement('a');
-    link.download = 'adjusted_image.png';
+    link.download = filename;
     link.href = canvas.toDataURL();
     link.click();
-});
+}
+
+function observeCanvas(callback) {
+    if (typeof callback === "function" && canvas) {
+        const observer = new MutationObserver(callback);
+        observer.observe(canvas, { attributes: true, childList: true, subtree: true });
+    }
+}
+
+function initializeCanvas(imageURL, width, height, units) {
+    createCanvas();
+    loadImageOnCanvas(imageURL, width, height, units);
+    observeCanvas(saveState);
+}

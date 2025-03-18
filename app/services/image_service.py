@@ -16,11 +16,8 @@ def apply_processor(image, processor_class, *args):
     processor = processor_class(image, *args)
     return processor.process()
 
-def process_image(image_file, action, value=0):
+def process_image(image_file, action, value):
     processors = {
-        'rotate_left': RotateLeft,
-        'rotate_right': RotateRight,
-        'flip': Flip,
         'brightness': Brightness,
         'grayscale': Grayscale,
         'blur': Blur,
@@ -39,25 +36,6 @@ def process_image(image_file, action, value=0):
         raise ValueError(f"Invalid action: {action}")
 
     return apply_processor(image_file, processors[action], value)
-
-class RotateLeft(ImageProcessor):
-    def process(self):
-        self.image = cv2.rotate(self.image, cv2.ROTATE_90_COUNTERCLOCKWISE)
-        return self.to_bytes()
-
-class RotateRight(ImageProcessor):
-    def process(self):
-        self.image = cv2.rotate(self.image, cv2.ROTATE_90_CLOCKWISE)
-        return self.to_bytes()
-
-class Flip(ImageProcessor):
-    def __init__(self, image, axis):
-        super().__init__(image)
-        self.axis = axis
-
-    def process(self):
-        self.image = cv2.flip(self.image, self.axis)
-        return self.to_bytes()
 
 class Brightness(ImageProcessor):
     def __init__(self, image, value):
