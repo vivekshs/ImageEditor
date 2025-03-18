@@ -18,13 +18,13 @@
                 </button>
                 <button>File</button>
                 <button>Resize</button>
-                <button>
+                <button id="undoBtn">
                     <img src="/ImageEditor/app/static/icons/undo_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="undo">
                 </button>
-                <button>
+                <button id="redoBtn">
                     <img src="/ImageEditor/app/static/icons/redo_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="redo">
                 </button>
-                <button>
+                <button id="saveBtn">
                     <img src="/ImageEditor/app/static/icons/file_save_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="save">
                 </button>
             </div>
@@ -74,24 +74,25 @@
             <span class="drag-hint">⋮⋮</span>
         </div>
         <div class="menu-icons">
-            <button class="icon-btn">
+            <button class="icon-btn" id="horizontal-flip">
                 <img src="/ImageEditor/app/static/icons/flip_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="Flip">
             </button>
-            <button class="icon-btn">
+            <button class="icon-btn" id="Vertical-flip">
                 <img src="/ImageEditor/app/static/icons/horizontal_split_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="horizontal">
             </button>
             <button class="icon-btn">
                 <img src="/ImageEditor/app/static/icons/vertical_split_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="Vertical">
             </button>
-            <button class="icon-btn">
+            <button class="icon-btn" id="rotate-left">
                 <img src="/ImageEditor/app/static/icons/rotate_left_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="rotate-left">
             </button>
-            <button class="icon-btn">
+            <button class="icon-btn" id="rotate-right">
                 <img src="/ImageEditor/app/static/icons/rotate_right_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="rotate-right">
             </button>
         </div>
     </div>
 </body>
 <script src="/ImageEditor/app/static/js/canvas.js"></script>
+<script src="/ImageEditor/app/static/js/filters.js"></script>
 <script src="/ImageEditor/app/static/js/editor.js"></script>
 </html>
