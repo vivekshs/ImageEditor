@@ -11,9 +11,9 @@
     <script src="/ImageEditor/app/static/js/popup.js" defer></script>
 </head>
 <body>
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="header">
-            <button>
+            <button id="menuBtn">
                 <img src="/ImageEditor/app/static/icons/menu.svg" alt="menu">
             </button>
         </div>
@@ -58,7 +58,7 @@
         </div>
     </div>
     
-    <div class="middlebar" >
+    <div class="middlebar" id="middlebar" >
         <div class="middlebar-header">
             <img src="/ImageEditor/app/static/logo/8439b51bb7a19f6e65ce1064bc37c197.svg" alt="">
             <button data-modal-target="#popup">
@@ -153,7 +153,7 @@
     </div>
     <div  id="overlay"></div>
 
-    <div class="main">
+    <div class="main" id="mainContainer">
         <div class="main-header">
             
         </div>

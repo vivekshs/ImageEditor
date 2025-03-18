@@ -1,3 +1,17 @@
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
+const middlebar = document.getElementById("middlebar");
+const mainContainer = document.getElementById("mainContainer");
+
+menuBtn.addEventListener("click", () => {
+    console.log("clicked");
+    sidebar.classList.toggle("collapsed");
+    
+    middlebar.classList.toggle("hidden");
+
+    mainContainer.classList.toggle("expanded");
+});
+
 // Modal handling
 const openModalButtons = document.querySelectorAll('[data-modal-target]');
 const closeModalButtons = document.querySelectorAll('[data-close-button]');
@@ -162,3 +176,4 @@ async function handleImageUpload(file) {
         alert("Failed to upload image. Please try again.");
     }
 }
+
