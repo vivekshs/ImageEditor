@@ -47,7 +47,7 @@ def upload():
         return f"Image decoding failed: {e}", 400
 
     image_id = str(uuid.uuid4())
-    image_store[image_id] = (time.time(), NonClosingBytesIO(image_bytes))
+    image_store[image_id] = (time.time(), NonClosingBytesIO(image_bytes), NonClosingBytesIO(image_bytes))
 
     return redirect(url_for('main.editor', image_id=image_id))
 
@@ -57,7 +57,7 @@ def get_image(image_id):
         print(f"Image ID not found: {image_id}")
         return "Image not found", 404
     print(f"Serving image for ID: {image_id}")
-    _, image_buffer = image_store[image_id]
+    _, _, image_buffer = image_store[image_id]
     image_buffer.seek(0)
     return send_file(image_buffer, mimetype='image/png')
 
@@ -86,28 +86,30 @@ def editor():
 def process():
     data = request.json
     image_id = data.get('image_id')
-    action = data.get('action')
-    value = data.get('value')
-
-    try:
-        value = int(value)
-    except ValueError:
-        return jsonify({'error': 'Invalid value parameter'}), 400
+    applied_filters = data.get('applied_filters', [])
 
     if image_id not in image_store:
         return jsonify({'error': 'Image not found'}), 404
 
-    _,image_buffer = image_store[image_id]
+    _, original_buffer, modified_buffer = image_store[image_id]
 
-    image_buffer.seek(0)
-    image_data = image_buffer.read()
+    original_buffer.seek(0)
+    image_data = original_buffer.read()
     image = cv2.imdecode(np.frombuffer(image_data, np.uint8), cv2.IMREAD_COLOR)
 
-    processed_image_bytes = process_image(image, action, value)
-    image_buffer.seek(0)
-    image_buffer.truncate()
-    image_buffer.write(processed_image_bytes)
-    image_buffer.seek(0)
+    for filter_action, filter_value in applied_filters:
+        try:
+            filter_value = int(filter_value)
+            image = process_image(image, filter_action, filter_value)
+            if image is None:
+                return jsonify({'error': f'process_image failed for {filter_action}'}), 500
+        except ValueError:
+            return jsonify({'error': f'Invalid filter value for {filter_action}. Must be an integer.'}), 400
+
+    processed_image_bytes = cv2.imencode('.png', image)[1].tobytes()
+    modified_buffer.seek(0)
+    modified_buffer.truncate()
+    modified_buffer.write(processed_image_bytes)
+    modified_buffer.seek(0)
 
     return jsonify({"image_url": url_for('main.get_image', image_id=image_id, _external=True)})
-

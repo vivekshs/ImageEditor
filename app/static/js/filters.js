@@ -1,14 +1,13 @@
+let appliedFilters = {};
+
 function rotateCanvas(direction) {
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
 
-    if (direction === 'left' || direction === 'right') {
-        tempCanvas.width = canvas.height;
-        tempCanvas.height = canvas.width;
-    } else {
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-    }
+    tempCanvas.width = canvas.height;
+    tempCanvas.height = canvas.width;
+
+    tempCtx.save();
 
     if (direction === 'left') {
         tempCtx.translate(0, canvas.width);
@@ -19,20 +18,20 @@ function rotateCanvas(direction) {
     }
 
     tempCtx.drawImage(canvas, 0, 0);
+    tempCtx.restore();
+
     canvas.width = tempCanvas.width;
     canvas.height = tempCanvas.height;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, 0, 0);
 
-    saveState(console.log("rotated"));
-
+    saveState();
+    console.log("Canvas rotated:", direction);
 }
 
 function flipCanvas(axis) {
-
-
     ctx.save();
-
+    
     if (axis === 'horizontal') {
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
@@ -43,11 +42,12 @@ function flipCanvas(axis) {
 
     ctx.drawImage(canvas, 0, 0);
     ctx.restore();
-    saveState(console.log("flipped"));
+
+    saveState();
+    console.log("Canvas flipped:", axis);
 }
 
 async function applyFilter(action, value) {
-    
     if (value === undefined || value === null) {
         console.error("Filter value is missing for action:", action);
         return;
@@ -56,19 +56,25 @@ async function applyFilter(action, value) {
         console.error("No image ID found");
         return;
     }
+
+    if (value === 0) {
+        delete appliedFilters[action];
+    } else {
+        appliedFilters[action] = value;
+    }
+
     try {
         let response = await fetch('/process', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 image_id: imageId,
-                action: action,
-                value: value
+                applied_filters: Object.entries(appliedFilters)
             })
         });
 
         if (!response.ok) throw new Error("Error applying filter");
-        
+
         const data = await response.json();
         if (data.image_url) {
             updateCanvasWithNewImage(data.image_url);
