@@ -44,7 +44,7 @@ class Brightness(ImageProcessor):
 
     def process(self):
         self.image = cv2.convertScaleAbs(self.image, alpha=1, beta=self.value)
-        return self.to_bytes()
+        return self.image
 
 class Grayscale(ImageProcessor):
     def __init__(self, image, intensity):
@@ -55,7 +55,7 @@ class Grayscale(ImageProcessor):
         gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         gray_bgr = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
         self.image = cv2.addWeighted(self.image, 1 - self.intensity, gray_bgr, self.intensity, 0)
-        return self.to_bytes()
+        return self.image
 
 class Blur(ImageProcessor):
     def __init__(self, image, value):
@@ -64,7 +64,7 @@ class Blur(ImageProcessor):
 
     def process(self):
         self.image = cv2.GaussianBlur(self.image, (self.value, self.value), 0)
-        return self.to_bytes()
+        return self.image
 
 class Contrast(ImageProcessor):
     def __init__(self, image, value):
@@ -73,7 +73,7 @@ class Contrast(ImageProcessor):
 
     def process(self):
         self.image = cv2.convertScaleAbs(self.image, alpha=self.value, beta=0)
-        return self.to_bytes()
+        return self.image
 
 class Exposure(ImageProcessor):
     def __init__(self, image, value):
@@ -82,7 +82,7 @@ class Exposure(ImageProcessor):
 
     def process(self):
         self.image = cv2.convertScaleAbs(self.image, alpha=1, beta=self.value)
-        return self.to_bytes()
+        return self.image
 
 class Brilliance(ImageProcessor):
     def __init__(self, image, value):
@@ -108,7 +108,7 @@ class Brilliance(ImageProcessor):
         hsv = cv2.merge((h, s, v))
         assert hsv.shape == self.image.shape
         self.image = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
-        return self.to_bytes()
+        return self.image
 
 class Highlight(ImageProcessor):
     def __init__(self, image, value):
@@ -119,7 +119,7 @@ class Highlight(ImageProcessor):
         hls = cv2.cvtColor(self.image, cv2.COLOR_BGR2HLS).astype(np.float32)
         h, l, s = cv2.split(hls)
         mask = l > 180  
-        return self.to_bytes()
+        return self.image
 
 class Shadows(ImageProcessor):
     def __init__(self, image, value):
@@ -129,7 +129,7 @@ class Shadows(ImageProcessor):
     def process(self):
         mask = self.image < 50
         self.image = np.where(mask, np.clip(self.image + self.value, 0, 255), self.image).astype(np.uint8)
-        return self.to_bytes()
+        return self.image
 
 class NoiseReduction(ImageProcessor):
     def __init__(self, image, value):
@@ -138,7 +138,7 @@ class NoiseReduction(ImageProcessor):
 
     def process(self):
         self.image = cv2.fastNlMeansDenoisingColored(self.image, None, self.value, self.value, 7, 21)
-        return self.to_bytes()
+        return self.image
 
 class Vignette(ImageProcessor):
     def __init__(self, image, value):
@@ -151,7 +151,7 @@ class Vignette(ImageProcessor):
         mask = np.sqrt(X ** 2 + Y ** 2)
         mask = np.clip(1 - mask, 0, 1) * (1 - self.value)
         self.image = (self.image * mask[:, :, np.newaxis]).astype(np.uint8)
-        return self.to_bytes()
+        return self.image
 
 class Sharpness(ImageProcessor):
     def __init__(self, image, value):
@@ -161,4 +161,4 @@ class Sharpness(ImageProcessor):
     def process(self):
         blurred = cv2.GaussianBlur(self.image, (0, 0), 3)
         self.image = cv2.addWeighted(self.image, 1 + self.value, blurred, -self.value, 0)
-        return self.to_bytes()
+        return self.image
