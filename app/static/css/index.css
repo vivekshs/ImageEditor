@@ -1,95 +1,150 @@
-body{
-    background-color: rgb(241, 227, 241);
-    margin: 0;
-    padding: 0;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
     font-family: 'Roboto', sans-serif;
 }
+
+body{
+    background-color: rgb(241, 227, 241);;
+}
+/*This is a sidebar section...*/
 .sidebar{
     display: flex;
-    flex-direction: column;
+    flex-direction: column;   
+    justify-content: start; 
     align-items: center;
-    width: 70px;
-    height: 100%;
+    width: 6vw;
+    height: 100vh;
     transition: width 0.3s ease;
-    
+    background-color: white;
+    border-right: 2px solid rgb(197, 145, 240,0.5);
 }
-.sidebar.collapsed {
-    width: 60px;
+.sidebar .collapsed {
+    width: 6vw;
 }
 
+/*This is a header section....*/
 .header{
+    width:100%;
+    height: 10vh;
     display: flex;
-    flex-direction: column;
-    width: 70px;
+    justify-content: center;
     align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     background-color: rgb(241, 227, 241);
+    border-bottom: 2px solid rgb(197, 145, 240,0.5);
+    
     
 }
 .header button{
-    align-items: baseline;
     border: none;
-    padding: 13px;
-    border-radius: 30%;
+    padding: 0.8em 1em;
+    border-radius: 10px;
     background-color: rgb(241, 227, 241);
     cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease,transform 0.3 ease;
 }
 .header button:hover{
-   background-color: rgb(197, 145, 240,0.5);
+    background-color: rgb(197, 145, 240,0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);   
+    transform:scale(1.1);
 }
-.header img{
-    width: 20px;
+.header button i{
+    font-size: 1.2rem;
 }
+/*This is a sidebar-middle section...*/
 .sidebar-list{
     display: flex;
     flex-direction: column;
-    position: fixed;
-    left: 0;
-    top: 49px;
-    bottom: 0;
-    width: 70px;
-    background-color: rgb(241, 227, 241);
-    border-right: 0.3px solid rgb(209, 173, 173);
-}
-
-.sidebar-list a {
-    text-decoration: none;  
-    color: inherit; 
-    display: flex;
-    flex-direction: column;
+    justify-content: start;
     align-items: center;
+    gap:1rem;
+    width: 100%;
+    height:70vh;
+    background-color: rgb(241, 227, 241);
+    border-bottom: 2px solid rgb(197, 145, 240,0.5);
+    
+
 }
 
-.sidebar-list a p {
-    text-decoration: none;  
-    color: inherit;        
-}
 .sidebar-item{
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    
+    width:100%;
+    height:20%;
     
 }
-.sidebar-item img{
-    width: 32px;
-    
-    cursor: pointer;
-    padding: 7px;
-    border-radius: 30%;
+.sidebar-item a ,.sidebar-item p{
+    text-decoration: none;
+    color:inherit;
 }
-.sidebar-item img:hover{
+.sidebar-item a{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items:center;
+    height: 100%;
+}
+.sidebar-item i{
+    font-size:1.4rem;
+    padding: 0.6em 1em;
+    border-radius: 10px;
+    transition: background-color 0.3s ease , box-shadow 0.3s ease,transform 0.3s ease;
+}
+.sidebar-item  i:hover{
     background-color: rgb(197, 145, 240,0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    transform: scale(1.1);
+}
+
+.sidebar-item p{
+    text-decoration-style: none;
+    font-weight: 600;
     
 }
-.sidebar-item p{
-    font-size: 14px;
-    margin: 0;
-    text-align: center;
+/*This is a sidebar-bottom section...*/
+.sidebar-end{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height:20vh;
+    background-color: rgb(241, 227, 241);
+}
+.sidebar-add-btn{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    width:1.4rem;
+    padding:0.5em 1em;
+    border-radius:3em;
+    background-color:rgb(197, 145, 240,0.5) ;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+    transition: box-shadow 0.3s ease,transform 0.3s ease;
+}
+.sidebar-add-btn:hover{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+.sidebar-user-btn{   
+    border-radius: 50%;  
+    
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+    transition: box-shadow 0.3s ease,transform 0.3s ease;
+}
+.sidebar-user-btn:hover{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+.sidebar-user-btn i{
+    font-size: 1.8rem;
+    width:100%;
 }
 
 .middlebar{
