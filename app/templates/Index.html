@@ -12,7 +12,8 @@
     <script src="/ImageEditor/app/static/js/popup.js" defer></script>
 </head>
 <body>
-    <div class="sidebar" id="sidebar">
+    <div class="homepage">
+        <div class="sidebar" id="sidebar">
         <div class="header">
             <button id="menuBtn">
                 <i class="fa-solid fa-bars"></i>
@@ -42,34 +43,22 @@
         </div>
 
         <div class="sidebar-end">
-            <button class="sidebar-add-btn">
+            <button class="sidebar-add-btn" data-modal-target="#popup">
                 <i class="fa-solid fa-plus"></i>
             </button>
+            
             <button class="sidebar-user-btn">
                 <i class="fa-solid fa-circle-user"></i>
             </button>
         </div>
     </div>
     
-    <!-- <div class="middlebar" id="middlebar" >
-        <div class="middlebar-header">
-            <img src="/ImageEditor/app/static/logo/8439b51bb7a19f6e65ce1064bc37c197.svg" alt="">
-            <button data-modal-target="#popup">
-                <img style="width: 35px; display: inline;" src="/ImageEditor/app/static/icons/add_circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="">
-                <p>Create a design</p>
-            </button>
+     <div class="middlebar" id="middlebar" >
+        <div class="middlebar-upper">
+            <h3>Recent Templates</h3>
         </div>
-        <div class="recent">
-            <div class="middlebar-recent">
-                <h4>Recent Templates</h4>
-            </div>
-        </div>
-        <div class="trash">
-            <button>
-                <img src="/ImageEditor/app/static/icons/delete_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="">
-                <p>Trash</p>
-            </button>
-            
+        <div class="middlebar-bottom">
+            <h4>Trash</h4>
         </div>
     </div>
 
@@ -150,6 +139,9 @@
         <div class="main-header">
             
         </div>
-    </div> -->
+    </div>  
+
+    </div>
+    
 </body>
 </html>
