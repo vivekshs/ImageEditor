@@ -3,23 +3,23 @@ const sidebar = document.getElementById("sidebar");
 const middlebar = document.getElementById("middlebar");
 const mainContainer = document.getElementById("mainContainer");
 
- let isOpen = false;
+let isOpen = false;
 
-        function recentTemp() {
-            const icon = document.getElementById("arrowIcon");
-            const lowerContent = document.getElementById("lowerContent");
+    function recentTemp() {
+        const icon = document.getElementById("arrowIcon");
+        const lowerContent = document.getElementById("lowerContent");
 
-            if (!isOpen) {
-                icon.classList.remove("fa-arrow-right");
-                icon.classList.add("fa-arrow-down");
-                lowerContent.style.display = "none";
-            } else {
-                icon.classList.remove("fa-arrow-down");
-                icon.classList.add("fa-arrow-right");
-                lowerContent.style.display = "block";
-            }
+        if (!isOpen) {
+            icon.classList.remove("fa-arrow-right");
+            icon.classList.add("fa-arrow-down");
+            lowerContent.style.display = "none";
+        } else {
+            icon.classList.remove("fa-arrow-down");
+            icon.classList.add("fa-arrow-right");
+            lowerContent.style.display = "block";
+        }
 
-            isOpen = !isOpen;
+        isOpen = !isOpen;
         }
 
 
