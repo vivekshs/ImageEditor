@@ -547,7 +547,7 @@
     transition: 200ms ease-in-out;
     display: grid;
     grid-template-columns: 1fr 3fr;
-    z-index: 2;
+    z-index: 3;
 }
 #overlay.active {
     display: block;  
@@ -557,13 +557,14 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1;
+    z-index: 2;
     transition: 200ms ease-in-out;
 }
 
 .main{
     background-color: white;
     flex-grow: 1;
+    flex-wrap:wrap;
     margin-top: 10px;
     margin-right: 10px;
     padding: 10px 10px 8px 10px;
@@ -581,7 +582,7 @@
     display:flex;
     justify-content: space-between;
     align-items:center;
-    position:absolute ;
+    position:sticky ;
     top:20px;
     left:20px;
     right:20px;
@@ -604,7 +605,7 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-left:0.8rem;
+    margin-left:3.5rem;
     
 }
 .search-bar{
@@ -666,6 +667,10 @@
     flex-direction:column;
     justify-content: start;
     align-items: center;
+    position: fixed;
+    top:-66px;
+    left:0px;
+    right: 10px;
     position:relative;
 }
 .main-header-body img{
@@ -728,4 +733,71 @@
 
 .span-button button:active {
     transform: scale(0.96);
+}
+
+.feature-section{
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    padding:4rem 2rem;
+    gap:5rem;
+    background-color:#fdfcff ;
+}
+.feature-heading{
+    color:var(--iconscolor);
+    text-shadow:0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.feature-body{
+    width:100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap:4rem;
+    flex-wrap:wrap;
+    max-width: 900px;
+}
+.features-card{
+    display:flex;
+    flex-direction: column;
+    justify-content:space-between;
+    align-items: center;
+    gap:1.5rem;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    background-color: white;
+}
+.features-card:hover{
+    transform: scale(1.1);
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.3);
+
+}
+.card-head{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-head i{
+    font-size: 2rem;
+}
+.card-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap:1rem;
+    flex-wrap: wrap;
+    max-width: 300px;
+}
+.card-title{
+    font-size: 1.6rem;
+    font-weight: 600;
+    color:var(--iconscolor);
+}
+.card-description{
+    font-size: 1.1rem;
+    color:var(--hovercolor);
 }
